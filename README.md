@@ -22,7 +22,7 @@ Ce script utilise la bibliothèque `telethon` pour crawler les messages de plusi
 1. **Cloner le dépôt**
 
    ```bash
-   git clone https://github.com/votreutilisateur/telegram-channel-crawler.git
+   git clone https://github.com/XtoonsDev/telegram-channel-crawler.git
    cd telegram-channel-crawler
    ```
 
