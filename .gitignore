@@ -1,0 +1,11 @@
+# Python specific
+*.pyc
+__pycache__/
+venv/
+
+# Configuration files
+config/config.json
+
+# Telethon session files
+*.session
+*.session-journal
