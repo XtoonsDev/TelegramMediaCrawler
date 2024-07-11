@@ -4,8 +4,11 @@ __pycache__/
 venv/
 
 # Configuration files
+config/
 config/config.json
+config/appconfiguration.txt
 
 # Telethon session files
 *.session
 *.session-journal
+*.json
