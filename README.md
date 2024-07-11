@@ -89,3 +89,21 @@ Le script surveillera maintenant les canaux source spécifiés et repostera auto
 ## License
 
 Ce projet est sous licence MIT - voir le fichier LICENSE pour plus de détails.
+
+## Avertissement
+
+Ce logiciel est fourni "tel quel", sans garantie d'aucune sorte, explicite ou implicite, y compris mais sans s'y limiter aux garanties de qualité marchande, d'adéquation à un usage particulier et d'absence de contrefaçon. En aucun cas, les auteurs ou détenteurs des droits d'auteur ne pourront être tenus responsables de toute réclamation, dommage ou autre responsabilité, que ce soit dans le cadre d'une action contractuelle, délictuelle ou autre, résultant de, ou en relation avec le logiciel ou l'utilisation ou d'autres transactions dans le logiciel.
+
+### Avis d'utilisation :
+- Ce script est destiné uniquement à des fins éducatives et informatives.
+- L'utilisation de ce script doit se conformer à toutes les lois applicables et aux conditions d'utilisation des plateformes concernées, en particulier Telegram.
+- Les utilisateurs sont responsables de s'assurer que leurs actions ne violent pas les conditions d'utilisation de Telegram ou toute autre règle et réglementation applicable.
+- Les auteurs ne soutiennent ni n'encouragent aucune utilisation illégale ou non éthique de ce script.
+- Une mauvaise utilisation de ce script pour effectuer du spam, des abus ou d'autres activités interdites peut entraîner la suspension de votre compte ou d'autres conséquences légales.
+
+### Avis de sécurité :
+- Il est fortement recommandé de sécuriser vos clés API, tokens de bot et autres informations sensibles. Ne partagez pas ces identifiants avec des parties non autorisées.
+- Les utilisateurs sont responsables de la sécurité de leurs comptes Telegram et doivent s'assurer que l'utilisation de ce script ne compromet pas leurs informations personnelles ou leur sécurité.
+
+### Support :
+- Les auteurs ne fournissent aucune garantie quant au fonctionnement continu de ce script en raison des possibles changements dans l'API de Telegram ou des conditions d'utilisation.

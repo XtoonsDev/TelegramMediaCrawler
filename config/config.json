@@ -1,5 +1,6 @@
 {
     "api_id": "24993105",
     "api_hash": "5b1bcbebab67830502a786b05c1412b0",
-    "target_channel": "target_channel"
+	"phone_number": "+33",
+    "target_channel": "Mon_groupe_Dev"
 }
