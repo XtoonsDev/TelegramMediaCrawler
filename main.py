@@ -1,7 +1,8 @@
 import json
 import logging
+import asyncio
 from tqdm import tqdm
-from telethon import TelegramClient, events
+from telethon import TelegramClient, events, errors
 from telethon.tl.types import MessageMediaPhoto, MessageMediaDocument
 
 # Configurer le logging
@@ -29,6 +30,28 @@ async def get_entity_name(entity):
     """Helper function to get entity name for logging."""
     return entity.username if hasattr(entity, 'username') else str(entity.id)
 
+async def repost_message(event, target_channel_entity, chat_name, target_name):
+    try:
+        if event.message.media:
+            if isinstance(event.message.media, MessageMediaPhoto):
+                await client.send_file(target_channel_entity, event.message.media.photo, caption=event.message.message)
+                logging.info(f"Photo reposted from {chat_name} to {target_name}")
+            elif isinstance(event.message.media, MessageMediaDocument):
+                await client.send_file(target_channel_entity, event.message.media.document, caption=event.message.message)
+                logging.info(f"Document reposted from {chat_name} to {target_name}")
+        else:
+            await client.send_message(target_channel_entity, event.message.message)
+            logging.info(f"Message reposted from {chat_name} to {target_name}")
+
+        print(f"Message from {chat_name} reposted to {target_name}")
+    except errors.FloodWaitError as e:
+        logging.warning(f"Flood wait error: waiting for {e.seconds} seconds")
+        await asyncio.sleep(e.seconds)
+        await repost_message(event, target_channel_entity, chat_name, target_name)
+    except Exception as e:
+        logging.error(f"Error reposting message from {chat_name} to {target_name}: {e}")
+        print(f"Error reposting message from {chat_name} to {target_name}: {e}")
+
 @client.on(events.NewMessage)
 async def handler(event):
     try:
@@ -36,31 +59,15 @@ async def handler(event):
         chat_id = chat.id
         chat_name = await get_entity_name(chat)
 
-        # Logging pour débogage
         logging.debug(f"Received message from chat_id: {chat_id}, chat_name: {chat_name}")
         
-        # Vérifier si le message provient d'un des canaux ou groupes sources
         if chat_name in source_channels or str(chat_id) in source_channels:
-            # Récupérer le canal ou groupe cible
             target_channel_entity = await client.get_entity(target_channel)
             target_name = await get_entity_name(target_channel_entity)
-            
-            # Vérifier le type de média et le reposter dans le canal cible
-            if event.message.media:
-                if isinstance(event.message.media, MessageMediaPhoto):
-                    await client.send_file(target_channel_entity, event.message.media.photo, caption=event.message.message)
-                    logging.info(f"Photo reposted from {chat_name} to {target_name}")
-                elif isinstance(event.message.media, MessageMediaDocument):
-                    await client.send_file(target_channel_entity, event.message.media.document, caption=event.message.message)
-                    logging.info(f"Document reposted from {chat_name} to {target_name}")
-            else:
-                # Reposter le message texte dans le canal cible
-                await client.send_message(target_channel_entity, event.message.message)
-                logging.info(f"Message reposted from {chat_name} to {target_name}")
+            await repost_message(event, target_channel_entity, chat_name, target_name)
 
-            # Print pour la visibilité immédiate
-            print(f"Message from {chat_name} reposted to {target_name}")
-
+            with tqdm(total=1, desc="Processing messages", unit="msg") as pbar:
+                pbar.update(1)
     except Exception as e:
         logging.error(f"Error handling message from chat_id: {chat_id}: {e}")
         print(f"Error handling message from chat_id: {chat_id}: {e}")
@@ -69,49 +76,6 @@ async def main():
     await client.start(phone_number)
     print("Bot is running...")
     logging.info("Bot started")
-
-    # Utiliser tqdm pour afficher une barre de progression
-    with tqdm(total=0, desc="Processing messages", unit="msg") as pbar:
-        @client.on(events.NewMessage)
-        async def handler(event):
-            try:
-                chat = await event.get_chat()
-                chat_id = chat.id
-                chat_name = await get_entity_name(chat)
-
-                # Logging pour débogage
-                logging.debug(f"Received message from chat_id: {chat_id}, chat_name: {chat_name}")
-                
-                # Vérifier si le message provient d'un des canaux ou groupes sources
-                if chat_name in source_channels or str(chat_id) in source_channels:
-                    # Récupérer le canal ou groupe cible
-                    target_channel_entity = await client.get_entity(target_channel)
-                    target_name = await get_entity_name(target_channel_entity)
-
-                    # Vérifier le type de média et le reposter dans le canal cible
-                    if event.message.media:
-                        if isinstance(event.message.media, MessageMediaPhoto):
-                            await client.send_file(target_channel_entity, event.message.media.photo, caption=event.message.message)
-                            logging.info(f"Photo reposted from {chat_name} to {target_name}")
-                        elif isinstance(event.message.media, MessageMediaDocument):
-                            await client.send_file(target_channel_entity, event.message.media.document, caption=event.message.message)
-                            logging.info(f"Document reposted from {chat_name} to {target_name}")
-                    else:
-                        # Reposter le message texte dans le canal cible
-                        await client.send_message(target_channel_entity, event.message.message)
-                        logging.info(f"Message reposted from {chat_name} to {target_name}")
-
-                    # Print pour la visibilité immédiate
-                    print(f"Message from {chat_name} reposted to {target_name}")
-
-                    # Incrémenter la barre de progression
-                    pbar.update(1)
-
-            except Exception as e:
-                logging.error(f"Error handling message from chat_id: {chat_id}: {e}")
-                print(f"Error handling message from chat_id: {chat_id}: {e}")
-
-    # Garde le script en cours d'exécution
     await client.run_until_disconnected()
 
 with client:
