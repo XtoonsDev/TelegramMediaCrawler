@@ -10,6 +10,13 @@ Ce script utilise la bibliothèque `telethon` pour crawler les messages de plusi
 - Reposte les messages (y compris texte, photos et vidéos) dans un canal cible
 - Fonctionne en continu et traite les nouveaux messages au fur et à mesure qu'ils sont postés
 
+## Script
+
+1. main.py (Version initiale sans les fonctionnalités premium)
+2. main_premium.py (Version avec fonctionnalités premium)
+
+Note: N'utilisez pas le script Premium si vous n'avez pas le compte premium. Risque de bannissement.
+
 ## Installation
 
 ### Prérequis
